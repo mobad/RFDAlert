@@ -7,6 +7,7 @@ import configparser
 import os
 from urllib.request import Request
 from urllib.request import urlopen
+from urllib.parse import urljoin
 from subprocess import Popen, PIPE
 import dateutil.parser
 from bs4 import BeautifulSoup
@@ -82,13 +83,12 @@ for section in rfdSections:
         dealSoup = threadSoup.find("div", {"class":"post_content"})
         if not dealSoup: continue
 
-        # Convert named links to destination link.
-        for a in dealSoup.findAll('a'):
-            a.string = a['href']
+        # Convert relative links to absolute links.
+        for a in dealSoup.findAll('a', href=True):
+            a['href'] = urljoin(rfdUrl, a['href'])
 
-        # TODO: Use HTML emails so images and links work.
-        p = Popen(["mutt", "-s", str(posts) + "|" + str(votes) + ": " + title, ' '.join(emails)], stdin=PIPE)
-        p.communicate(input=bytes(link+"\n"+dealSoup.text, 'UTF-8'))
+        p = Popen(["mutt", "-e", "set content_type=text/html", "-s", str(posts) + "|" + str(votes) + ": " + title, ' '.join(emails)], stdin=PIPE)
+        p.communicate(input=bytes('<a href="'+link+'"/a>'+str(dealSoup), 'UTF-8'))
         if p.returncode != 0: continue
         print(p.returncode)
         c.execute('''INSERT INTO rfd VALUES (?)''', (link,))
