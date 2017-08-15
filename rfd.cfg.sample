@@ -1,0 +1,7 @@
+[rfd]
+db_path = rfd.db
+emails = email@example.com
+sections = /hot-deals-f9/
+
+#emails = email1@exmaple.com, email2@emample.com
+#sections = /hot-deals-f9/, /coupons-f136/
