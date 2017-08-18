@@ -75,7 +75,7 @@ for section in rfdSections:
 
         # Fetch post contents
         threadReq = Request(link, None, userAgent)
-        threadContent = urlopen(threadReq, timeout=10).read()
+        threadContent = urlopen(threadReq, timeout=10).read().decode('utf-8', 'ignore')
         threadSoup = BeautifulSoup(threadContent)
         for elem in threadSoup.findAll(['script', 'style']):
             elem.extract()
@@ -88,7 +88,7 @@ for section in rfdSections:
             a['href'] = urljoin(rfdUrl, a['href'])
 
         p = Popen(["mutt", "-e", "set content_type=text/html", "-s", str(posts) + "|" + str(votes) + ": " + title, ' '.join(emails)], stdin=PIPE)
-        p.communicate(input=bytes('<a href="'+link+'"/a>'+str(dealSoup), 'UTF-8'))
+        p.communicate(input=bytes('<a href="'+link+'"/a>'+str(dealSoup), 'utf8-8'))
         if p.returncode != 0: continue
         print(p.returncode)
         c.execute('''INSERT INTO rfd VALUES (?)''', (link,))
