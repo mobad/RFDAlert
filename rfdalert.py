@@ -86,8 +86,9 @@ for section in rfdSections:
         # Convert relative links to absolute links.
         for a in dealSoup.findAll('a', href=True):
             a['href'] = urljoin(rfdUrl, a['href'])
-
-        p = Popen(["mutt", "-e", "set content_type=text/html", "-s", str(posts) + "|" + str(votes) + ": " + title, ' '.join(emails)], stdin=PIPE)
+        args = ["mutt", "-e", "set content_type=text/html", "-s", str(posts) + "|" + str(votes) + ": " + title]
+        args.extend(emails)
+        p = Popen(args, stdin=PIPE)
         p.communicate(input=bytes('<a href="'+link+'"/a>'+str(dealSoup), 'utf-8'))
         if p.returncode != 0: continue
         print(p.returncode)
