@@ -29,7 +29,7 @@ for section in rfdSections:
     req = Request(rfdUrl+section, None, userAgent)
     content = urlopen(req, timeout=10).read().decode('utf-8', 'ignore')
 
-    soup = BeautifulSoup(content)
+    soup = BeautifulSoup(content, "lxml")
 
     for thread in soup.findAll("li", {"class" : "topic"}):
         # Get post date.
@@ -76,7 +76,7 @@ for section in rfdSections:
         # Fetch post contents
         threadReq = Request(link, None, userAgent)
         threadContent = urlopen(threadReq, timeout=10).read().decode('utf-8', 'ignore')
-        threadSoup = BeautifulSoup(threadContent)
+        threadSoup = BeautifulSoup(threadContent, "lxml")
         for elem in threadSoup.findAll(['script', 'style']):
             elem.extract()
 
