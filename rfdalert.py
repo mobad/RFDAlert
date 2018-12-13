@@ -53,8 +53,6 @@ for section in rfdSections:
         if not postSoup: continue
         posts = int(re.sub('[^0-9]', '', postSoup.string))
 
-        if (votes < 5*daysOld and posts < 10*daysOld) or votes < 0: continue
-
         # Get title.
         titleSoup = thread.find("h3", {"class" : "topictitle"})
         if not titleSoup: continue
@@ -64,6 +62,10 @@ for section in rfdSections:
             if part.string is not None:
                 title += part.string.strip() + " "
         title = title.strip()
+
+        timeSensitiveDeal = any(needle in title.lower() for needle in ['lava', 'error'])
+
+        if (not timeSensitiveDeal and votes < 5*daysOld and posts < 10*daysOld) or votes < 0: continue
 
         link = rfdUrl+titleSoup.find("a", {"class" : "topic_title_link"})['href']
 
