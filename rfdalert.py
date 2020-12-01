@@ -63,7 +63,7 @@ for section in rfdSections:
                 title += part.string.strip() + " "
         title = title.strip()
 
-        timeSensitiveDeal = any(needle in title.lower() for needle in ['lava', 'error'])
+        timeSensitiveDeal = any(needle in title.lower() for needle in ['inferno', 'volcano', 'lava', 'error'])
 
         if (not timeSensitiveDeal and votes < 5*daysOld and posts < 10*daysOld) or votes < 0: continue
 
